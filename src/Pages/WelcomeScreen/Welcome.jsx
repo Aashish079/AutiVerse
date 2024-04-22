@@ -7,7 +7,7 @@ const Welcome = () => {
     <div className="welcome-screen">
         <h1 className="title-Welcome">Welcome,</h1>
       <div className="brand-container">
-        <h1 className="title">Rising Star</h1>
+        <h1 className="title">Guiding Star</h1>
         <img src={starIcon} alt="Star" className="star-icon" />
       </div>
 
