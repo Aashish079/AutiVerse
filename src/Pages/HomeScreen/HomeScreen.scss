@@ -4,7 +4,8 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: black;
+    // background-color: black;
+    background-image:url('../../assets/bg3.png') ;
     
     .home-button {
       margin: 10px;
@@ -30,8 +31,8 @@
     color: white;
   }
   .star-icon {
-    width: 100px;
-    height: 100px;
+    width: 150px;
+    height: 150px;
     margin: 0px 0px 150px 50px;
   }
   .brand-container {

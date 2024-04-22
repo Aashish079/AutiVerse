@@ -1,5 +1,5 @@
 import './HomeScreen.scss';
-import starIcon from "../../assets/star.svg";
+import starIcon2 from "../../assets/star.png";
 
 const HomeScreen = () => {
   return (
@@ -7,7 +7,7 @@ const HomeScreen = () => {
     <div className="home-screen">
     <div className="brand-container">
         <h1 className="title">Guiding Star</h1>
-        <img src={starIcon} alt="Star" className="star-icon" />
+        <img src={starIcon2} alt="Star" className="star-icon" />
       </div>
       <button className="home-button">Play</button>
       <button className="home-button">Score</button>
