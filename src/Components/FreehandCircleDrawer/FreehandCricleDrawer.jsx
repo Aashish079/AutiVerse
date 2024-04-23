@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Stage, Layer, Line, Rect } from "react-konva";
+import { Stage, Layer, Line, Rect, Circle } from "react-konva";
 import "./FreehandCircleDrawer.scss";
 import { Link } from "react-router-dom";
 import { FaArrowCircleRight } from "react-icons/fa";
@@ -7,6 +7,7 @@ import { FaArrowCircleRight } from "react-icons/fa";
 function FreehandCircleDrawer() {
   const [lines, setLines] = useState([]);
   const [isDrawing, setIsDrawing] = useState(false);
+  const [perfectCircle, setPerfectCircle] = useState(null);
 
   const handleMouseDown = (event) => {
     setIsDrawing(true);
@@ -71,8 +72,13 @@ function FreehandCircleDrawer() {
       // The perfectness score can be calculated based on the standard deviation of distances
       // Lower standard deviation indicates the drawn shape is closer to a perfect circle
       const perfectnessScore = 1 / (1 + standardDeviation);
-
       console.log(`Perfectness Score: ${perfectnessScore.toFixed(2)}`);
+      // Update perfect circle data
+      setPerfectCircle({
+        x: centroidX,
+        y: centroidY,
+        radius: averageDistance,
+      });
     }
   };
 
@@ -113,6 +119,15 @@ function FreehandCircleDrawer() {
               lineJoin="round"
             />
           ))}
+          {perfectCircle && (
+            <Circle
+              x={perfectCircle.x}
+              y={perfectCircle.y}
+              radius={perfectCircle.radius}
+              stroke="red"
+              strokeWidth={4}
+            />
+          )}
         </Layer>
       </Stage>
     </div>
