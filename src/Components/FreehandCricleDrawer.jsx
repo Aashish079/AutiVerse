@@ -1,5 +1,5 @@
-import  { useState } from 'react';
-import { Stage, Layer, Line } from 'react-konva';
+import { useState } from "react";
+import { Stage, Layer, Line, Rect } from "react-konva";
 
 function FreehandCircleDrawer() {
   const [lines, setLines] = useState([]);
@@ -74,8 +74,8 @@ function FreehandCircleDrawer() {
   };
 
   return (
-    <div>
-      <h3>Draw a Freehand Circle and Measure Its Perfectness</h3>
+    <div className="canvasContainer">
+      <h3>Lets Draw Circles!!</h3>
       <Stage
         width={window.innerWidth}
         height={window.innerHeight}
@@ -84,6 +84,11 @@ function FreehandCircleDrawer() {
         onMouseUp={handleMouseUp}
       >
         <Layer>
+          <Rect
+            width={window.innerWidth}
+            height={window.innerHeight}
+            fill="#242424"
+          />
           {lines.map((line, index) => (
             <Line
               key={index}
