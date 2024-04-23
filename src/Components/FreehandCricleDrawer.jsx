@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { Stage, Layer, Line, Rect } from "react-konva";
+import "./FreehandCircleDrawer.scss";
+import { Link } from "react-router-dom";
+import { FaArrowCircleRight } from "react-icons/fa";
 
 function FreehandCircleDrawer() {
   const [lines, setLines] = useState([]);
@@ -75,7 +78,17 @@ function FreehandCircleDrawer() {
 
   return (
     <div className="canvasContainer">
-      <h3>Lets Draw Circles!!</h3>
+      <div className="title-container">
+        <h1>Lets Draw Circles!!</h1>
+        <Link to="/game2">
+          <button className="btn-next">
+            Next
+            <span className="icon">
+              <FaArrowCircleRight />
+            </span>
+          </button>
+        </Link>
+      </div>
       <Stage
         width={window.innerWidth}
         height={window.innerHeight}
