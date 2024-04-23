@@ -1,4 +1,4 @@
-import FreehandCircleDrawer from '../../Components/FreehandCricleDrawer'
+import FreehandCircleDrawer from '../../Components/FreehandCircleDrawer/FreehandCricleDrawer'
 
 const GameWindow1 = () => {
   return (
