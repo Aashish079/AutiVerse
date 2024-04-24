@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Welcome from './Pages/WelcomeScreen/Welcome'
 import HomeScreen from './Pages/HomeScreen/HomeScreen'
-import GameWindow1 from './Pages/GameWindow1/GameWindow1'
-import GameWindow2 from './Pages/GameWindow2/GameWindow2'
+import GameWindow1 from './Pages/GameWindow1/GameWindow1.jsx'
+import GameWindow2 from './Pages/GameWindow2/GameWindow2.jsx'
 import './App.css'
 
 const App = () => {
