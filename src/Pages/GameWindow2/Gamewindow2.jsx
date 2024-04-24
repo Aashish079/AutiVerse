@@ -4,6 +4,7 @@ const GameWindow2 = () => {
   return (
     <>
     <div className="Window-2">
+      
         <ClickAnimals/>
     </div>
     </>

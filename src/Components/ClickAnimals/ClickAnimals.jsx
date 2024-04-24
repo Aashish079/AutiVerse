@@ -1,5 +1,7 @@
 import Animaldata from "./AnimalData";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { IoMdExit } from "react-icons/io";
 import "./ClickAnimals.scss";
 
 const ClickAnimals = () => {
@@ -32,8 +34,18 @@ const ClickAnimals = () => {
 
   return (
     <div>
+      <div className="Nav-Container">
       <div className="select-message">
-        Find: <div className="animal">{currentAnimal?.name}</div>
+        Find: <span className="animal">{currentAnimal?.name}</span>
+      </div>
+        <Link to="/get-started">
+          <button className="btn-next">
+            Exit
+            <span className="icon">
+              <IoMdExit/>
+            </span>
+          </button>
+        </Link>
       </div>
       <div className="animal-container">
       {Animaldata.map((animal, index) => (
