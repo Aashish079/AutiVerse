@@ -6,6 +6,7 @@ import GameWindow1 from "./Pages/GameWindow1/GameWindow1";
 import GameWindow2 from "./Pages/GameWindow2/GameWindow2";
 import "./App.css";
 import Score from "./Pages/Score/Score";
+import About from "./Pages/About/About";
 
 const App = () => {
   return (
@@ -18,7 +19,7 @@ const App = () => {
             <Route path="/game1" element={<GameWindow1 />} />
             <Route path="/game2" element={<GameWindow2 />} />
             <Route path="/score" element={<Score/>} />
-            <Route path="/about" element={<GameWindow2 />} />
+            <Route path="/about" element={<About />} />
 
           </Routes>
         </BrowserRouter>
