@@ -1,12 +1,28 @@
 .score-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-image:url('../../assets/bg3.png') ;
-  
-    img {
-      max-width: 100%;
-      height: auto;
-    }
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-image: url("../../assets/bg3.png");
+
+  img {
+    max-width: 50%;
+    height: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
   }
+  .analysis-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 100 100 200px 0 rgba(0, 0, 0, 0.1);
+    color: rgb(65, 114, 206);
+    width: 80%;
+  }
+  p {
+    font-size: 1.2em;
+    margin: 10px;
+    color: black;
+  }
+}

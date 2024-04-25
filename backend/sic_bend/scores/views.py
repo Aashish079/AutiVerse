@@ -148,6 +148,7 @@ class SessionPlotUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 #         return Response("Plots generated and saved successfully.", status=status.HTTP_200_OK)
 
 
+# Older Session Plot
 class GenerateSessionPlot(APIView):
     def get(self, request):
         # filter all the gamesession with date = today
