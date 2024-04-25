@@ -11,12 +11,13 @@ const ClickAnimals = () => {
 
   const [currentAnimal, setCurrentAnimal] = useState(null);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
+  const [click, setClick] = useState(0);
 
   //Shuffle the array of animals and set the first one as the current animal
   useEffect(() => {
-    const shuffledAnimals = [...Animaldata].sort(() => Math.random() - 0.5);
+    const shuffledAnimals = [...Animaldata()].sort(() => Math.random() - 0.5);
     setCurrentAnimal(shuffledAnimals[0]);
-  }, [selectedAnimal]);
+  }, [selectedAnimal, click]);
   //Handle image click
   const handleImageClick = (animal) => {
     setSelectedAnimal(animal);
@@ -30,18 +31,23 @@ const ClickAnimals = () => {
         //Play the animal sound
         sound = new Audio(selectedAnimal.sound);
         setScore(score + 10);
+        setClick(click + 1);
       } else {
         //Play the error sound
-        sound = new Audio(selectedAnimal.error).play();
+        sound = new Audio(selectedAnimal.error);
+        setClick(click + 1);
       }
-      sound.play();
+      sound?.play();
       // Stop the sound after 5 seconds
       const timeoutId = setTimeout(() => {
-        sound.pause();
+        sound?.pause();
         sound.currentTime = 0;
       }, 4000);
       // Clean up the timeout when the component unmounts or re-renders
-      return () => clearTimeout(timeoutId);
+      return () => {
+        clearTimeout(timeoutId);
+        sound.pause();
+      };
     }
   }, [selectedAnimal]);
 
@@ -62,7 +68,7 @@ const ClickAnimals = () => {
         </Link>
       </div>
       <div className="animal-container">
-        {Animaldata.map((animal, index) => (
+        {Animaldata().map((animal, index) => (
           <img
             className="animal-image"
             key={index}
