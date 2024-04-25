@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import apiClient from '../../utils/api-client';
 import './Score.scss';
 
 const Score = () => {
@@ -8,11 +8,11 @@ const Score = () => {
   useEffect(() => {
     const fetchImage = async () => {
       try {
-        const message = await axios.get('/score/generatesessionplot'); 
-        // console.log(message);
-        const response = await axios.get('/score/sessionplot'); 
-        console.log(response);
-        setImage(response.data);
+        const message = await apiClient.get('/score/generatesessionplot'); 
+        console.log(message);
+        const response = await apiClient.get('/score/sessionplot'); 
+        console.log(response.data[0].plot);
+        setImage(response.data[0].plot);
       } catch (error) {
         console.error('Error fetching image', error);
       }
@@ -23,7 +23,10 @@ const Score = () => {
 
   return (
     <div className="score-container">
-      {image && <img src={image.url} alt="Score" />}
+      {image && <img src={image} 
+      width={800}
+
+      alt="Score" />}
       {/* Add additional features here */}
     </div>
   );

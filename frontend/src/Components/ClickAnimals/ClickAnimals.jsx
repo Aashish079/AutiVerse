@@ -5,6 +5,8 @@ import { IoMdExit } from "react-icons/io";
 import "./ClickAnimals.scss";
 import { ScoreContext } from "../../contexts/ScoreContext";
 import ScoreBoard from "../ScoreBoard/ScoreBoard";
+import apiClient from "../../utils/api-client";
+import { head_selector } from "svelte/internal";
 
 const ClickAnimals = () => {
   const { score, setScore } = useContext(ScoreContext);
@@ -50,38 +52,65 @@ const ClickAnimals = () => {
       };
     }
   }, [selectedAnimal]);
+  console.log(score);
+  const data = {
+    name: "user1",
+    score: Math.round(score),
+    game_session: "Game5",
+  };
 
-  return (
-    <div>
-      <div className="Nav-Container">
-        <div className="select-message">
-          Find: <span className="animal">{currentAnimal?.name}</span>
-        </div>
-        <ScoreBoard />
-        <Link to="/get-started">
-          <button className="btn-next">
-            Exit
-            <span className="icon">
-              <IoMdExit />
-            </span>
-          </button>
-        </Link>
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  //Save the score to the backend
+const saveScore = () => {
+
+  apiClient
+    .post("/score/list/", data, config)
+    .then((response) => {
+      console.log(response.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+    setScore(0);
+    
+};
+
+
+return (
+  <div>
+    <div className="Nav-Container">
+      <div className="select-message">
+        Find: <span className="animal">{currentAnimal?.name}</span>
       </div>
-      <div className="animal-container">
-        {Animaldata().map((animal, index) => (
-          <img
-            className="animal-image"
-            key={index}
-            src={animal.image}
-            alt={animal.name}
-            width={100}
-            height={100}
-            onClick={() => handleImageClick(animal)}
-          />
-        ))}
-      </div>
+      <ScoreBoard />
+      <Link to="/get-started" onClick={saveScore}>
+        <button className="btn-next">
+          Exit
+          <span className="icon">
+            <IoMdExit />
+          </span>
+        </button>
+      </Link>
     </div>
-  );
+    <div className="animal-container">
+      {Animaldata().map((animal, index) => (
+        <img
+          className="animal-image"
+          key={index}
+          src={animal.image}
+          alt={animal.name}
+          width={100}
+          height={100}
+          onClick={() => handleImageClick(animal)}
+        />
+      ))}
+    </div>
+  </div>
+);
 };
 
 export default ClickAnimals;
