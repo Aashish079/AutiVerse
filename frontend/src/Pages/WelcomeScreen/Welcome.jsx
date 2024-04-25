@@ -4,11 +4,15 @@ import starIcon from "../../assets/star.svg";
 
 const Welcome = () => {
   return (
+    <>
     <div className="welcome-screen">
-        <h1 className="title-Welcome">Welcome,</h1>
       <div className="brand-container">
-        <h1 className="title">Guiding Star</h1>
+        <p className="title">Guiding Star</p>
         <img src={starIcon} alt="Star" className="star-icon" />
+      </div>
+      <div className="title-Welcome">
+        <h1 >Welcome,</h1>
+        <p>Little Champ! </p>
       </div>
 
       <div className="btn-container">
@@ -17,6 +21,7 @@ const Welcome = () => {
         </Link>
       </div>
     </div>
+    </>
   );
 };
 
