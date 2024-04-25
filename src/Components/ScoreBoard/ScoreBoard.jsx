@@ -7,7 +7,7 @@ const ScoreBoard = () => {
   return (
     <div className='score-board'>
         <h2>Score</h2>
-        <p>{score}</p>
+        <p>{Math.round(score)}</p>
     </div>
   );
 }

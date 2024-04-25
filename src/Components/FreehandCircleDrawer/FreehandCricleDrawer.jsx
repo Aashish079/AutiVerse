@@ -4,9 +4,10 @@ import "./FreehandCircleDrawer.scss";
 import { Link } from "react-router-dom";
 import { FaArrowCircleRight } from "react-icons/fa";
 import { ScoreContext } from "../../contexts/ScoreContext";
+import ScoreBoard from "../ScoreBoard/ScoreBoard";
 
 function FreehandCircleDrawer() {
-  const {score, setScore} = useContext(ScoreContext);
+  const { score, setScore } = useContext(ScoreContext);
 
   const [lines, setLines] = useState([]);
   const [isDrawing, setIsDrawing] = useState(false);
@@ -55,36 +56,54 @@ function FreehandCircleDrawer() {
 
       // Calculate the average distance from each point to the centroid
       let sumDistance = 0;
+      let sumAngle = 0;
       line.forEach((point) => {
         const dx = point.x - centroidX;
         const dy = point.y - centroidY;
+        const angle = Math.atan2(dy, dx);
         sumDistance += Math.sqrt(dx ** 2 + dy ** 2);
+        sumAngle += angle;
       });
       const averageDistance = sumDistance / line.length;
-
-      // Calculate the standard deviation of distances
-      let sumSquaredDifference = 0;
-      line.forEach((point) => {
-        const dx = point.x - centroidX;
-        const dy = point.y - centroidY;
-        const distance = Math.sqrt(dx ** 2 + dy ** 2);
-        sumSquaredDifference += (distance - averageDistance) ** 2;
-      });
-      const standardDeviation = Math.sqrt(sumSquaredDifference / line.length);
-
-      // The perfectness score can be calculated based on the standard deviation of distances
-      // Lower standard deviation indicates the drawn shape is closer to a perfect circle
-      const perfectnessScore = 1 / (1 + standardDeviation); //This logic for calculating perfectness score needs to be updated.
-
-
-      setScore(score + perfectnessScore);
-      console.log(`Perfectness Score: ${perfectnessScore.toFixed(2)}`);
-      // Update perfect circle data
+      const averageAngle = sumAngle / line.length;
+      console.log(`Avg distance: ${averageDistance}`);
       setPerfectCircle({
         x: centroidX,
         y: centroidY,
         radius: averageDistance,
       });
+
+      // Calculate the standard deviation of distances
+      let sumSquaredDifference = 0;
+      let sumSquaredDifferenceAngle = 0;
+      line.forEach((point) => {
+        const dx = point.x - centroidX;
+        const dy = point.y - centroidY;
+        const distance = Math.sqrt(dx ** 2 + dy ** 2);
+        sumSquaredDifference += (distance - averageDistance) ** 2;
+        const angle = Math.atan2(dy, dx);
+        sumSquaredDifferenceAngle += (angle - averageAngle) ** 2;
+      });
+      const standardDeviation = Math.sqrt(sumSquaredDifference / line.length);
+      const standardDeviationAngle = Math.sqrt(
+        sumSquaredDifferenceAngle / line.length
+      );
+
+      console.log(`standard deviation: ${standardDeviation.toFixed(2)}`);
+
+      // The perfectness score can be calculated based on the standard deviation of distances
+      // Lower standard deviation indicates the drawn shape is closer to a perfect circle
+      let perfectnessScore =
+        1 / (1 + standardDeviation + standardDeviationAngle);
+      // Add a bias based on the radius
+      const radiusBias = averageDistance * 0.01;
+
+      perfectnessScore = 1 / (1 + Math.exp(-(perfectnessScore*1 + radiusBias)));
+      let finalScore = perfectnessScore * 10;
+
+      setScore(score + finalScore);
+      console.log(`Perfectness Score: ${perfectnessScore.toFixed(2)}`);
+      // Update perfect circle data
     }
   };
 
@@ -92,6 +111,7 @@ function FreehandCircleDrawer() {
     <div className="canvasContainer">
       <div className="title-container">
         <h1>Lets Draw Circles!!</h1>
+        <ScoreBoard />
         <Link to="/game2">
           <button className="btn-next">
             Next
