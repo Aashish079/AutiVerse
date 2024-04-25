@@ -1,10 +1,13 @@
 import Animaldata from "./AnimalData";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { IoMdExit } from "react-icons/io";
 import "./ClickAnimals.scss";
+import { ScoreContext } from "../../contexts/ScoreContext";
 
 const ClickAnimals = () => {
+  const {score, setScore} = useContext(ScoreContext);
+
   const [currentAnimal, setCurrentAnimal] = useState(null);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   

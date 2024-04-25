@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Stage, Layer, Line, Rect, Circle } from "react-konva";
 import "./FreehandCircleDrawer.scss";
 import { Link } from "react-router-dom";
 import { FaArrowCircleRight } from "react-icons/fa";
+import { ScoreContext } from "../../contexts/ScoreContext";
 
 function FreehandCircleDrawer() {
+  const {score, setScore} = useContext(ScoreContext);
+
   const [lines, setLines] = useState([]);
   const [isDrawing, setIsDrawing] = useState(false);
   const [perfectCircle, setPerfectCircle] = useState(null);
@@ -71,7 +74,10 @@ function FreehandCircleDrawer() {
 
       // The perfectness score can be calculated based on the standard deviation of distances
       // Lower standard deviation indicates the drawn shape is closer to a perfect circle
-      const perfectnessScore = 1 / (1 + standardDeviation);
+      const perfectnessScore = 1 / (1 + standardDeviation); //This logic for calculating perfectness score needs to be updated.
+
+
+      setScore(score + perfectnessScore);
       console.log(`Perfectness Score: ${perfectnessScore.toFixed(2)}`);
       // Update perfect circle data
       setPerfectCircle({
