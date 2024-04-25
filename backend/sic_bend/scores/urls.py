@@ -12,5 +12,7 @@ urlpatterns = [
     path('generatesessionplot/', GenerateSessionPlot.as_view(),name='GenerateSessionPlot'),
     path('generateoveralldayplot/', GenerateOverallDayPlot.as_view(),name='GenerateOverallDayPlot'),
 
-]  
+]
+
+# 
 

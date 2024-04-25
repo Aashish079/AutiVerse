@@ -219,7 +219,5 @@ class GenerateOverallDayPlot(APIView):
             # Close the plot figure
             plt.close()
 
-        plots = OverallDayPlot.objects.all()
-        # returning the list of all the plots
-
+            return Response("Plots generated and saved successfully.", status=status.HTTP_200_OK)
         
