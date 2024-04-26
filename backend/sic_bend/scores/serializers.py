@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Score,  OverallDayPlot, SessionPlot
+from .models import Score,  OverallDayPlot, SessionPlot, AveragePlot
 
 
 
@@ -17,4 +17,9 @@ class ScorePlotSeializer(serializers.ModelSerializer):
 class SessionPlotSeializer(serializers.ModelSerializer):
     class Meta:
         model = SessionPlot
+        fields = "__all__"
+
+class AveragePlotSeializer(serializers.ModelSerializer):
+    class Meta:
+        model = AveragePlot
         fields = "__all__"

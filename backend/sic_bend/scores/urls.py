@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import ScoreListCreateView, ScoreUpdateDestroyView, GenerateSessionPlot, SessionPlotListCreateView, OverallDayPlotListCreateView, OverallDayPlotUpdateDestroyView, SessionPlotUpdateDestroyView, GenerateOverallDayPlot
+from .views import ScoreListCreateView, ScoreUpdateDestroyView, GenerateSessionPlot, SessionPlotListCreateView, OverallDayPlotListCreateView, OverallDayPlotUpdateDestroyView, SessionPlotUpdateDestroyView, GenerateOverallDayPlot, GenerateAveragePlot, AveragePlotListCreateView, AveragePlotUpdateDestroyView
 
 
 urlpatterns = [
@@ -11,8 +11,10 @@ urlpatterns = [
     path('sessionplot/<slug:pk>', SessionPlotUpdateDestroyView.as_view(),name='SessionPlot'),
     path('generatesessionplot/', GenerateSessionPlot.as_view(),name='GenerateSessionPlot'),
     path('generateoveralldayplot/', GenerateOverallDayPlot.as_view(),name='GenerateOverallDayPlot'),
+    path('generateaverageplot/', GenerateAveragePlot.as_view(),name='GenerateAveragePlot'),
+    path('averageplot/', AveragePlotListCreateView.as_view(),name='AveragePlot'),
+    path('averageplot/<slug:pk>', AveragePlotUpdateDestroyView.as_view(),name='AveragePlot'),
 
 ]
-
-# 
+ 
 

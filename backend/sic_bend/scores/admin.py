@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Score, OverallDayPlot, SessionPlot
+from .models import Score, OverallDayPlot, SessionPlot, AveragePlot
 
 
 
@@ -23,7 +23,14 @@ class SessionPlotAdmin(admin.ModelAdmin):
     list_filter = ('date', 'game_session')
     ordering = ('-date',)
 
+class AveragePlotAdmin(admin.ModelAdmin):
+    list_display = ('plot',)
+    search_fields = ('plot',)
+    list_filter = ('plot',)
+    ordering = ('-plot',)
+
 admin.site.register(Score, ScoreAdmin)
 admin.site.register(SessionPlot, SessionPlotAdmin)
 admin.site.register(OverallDayPlot, OverallDayPlotAdmin)
+admin.site.register(AveragePlot, AveragePlotAdmin)
 

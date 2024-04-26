@@ -1,11 +1,9 @@
 from django.shortcuts import render
-
-# Create your views here.
 from rest_framework.views import APIView
 from rest_framework import status
-from rest_framework.response import Response
-from .serializers import ScoreSeializer, ScorePlotSeializer, SessionPlotSeializer 
-from .models import Score, OverallDayPlot, SessionPlot
+from django.http import JsonResponse
+from .serializers import ScoreSeializer, ScorePlotSeializer, SessionPlotSeializer, AveragePlotSeializer 
+from .models import Score, OverallDayPlot, SessionPlot, AveragePlot
 from rest_framework import generics, permissions
 import matplotlib
 matplotlib.use('Agg')
@@ -14,6 +12,9 @@ from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
 from datetime import date, timedelta
 import os
+from django.db import models
+import matplotlib.dates as mdates
+
 
 
 class ScoreListCreateView(generics.ListCreateAPIView):
@@ -78,75 +79,6 @@ class SessionPlotUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.AllowAny]
 
 
-# class GeneratePlot(APIView):
-#     def get(self, request):
-#         # Get all unique dates
-#         unique_dates = Score.objects.dates('created_at', 'day')
-#         print(unique_dates)
-#         for unique_date in unique_dates:
-#             # Check if plot for this date already exists and it's not today's date
-#             if unique_date != date.today() and ScorePlot.objects.filter(date=unique_date).exists():
-#                 continue
-
-#             # Get scores for this date
-#             scores = Score.objects.filter(created_at__date=unique_date)
-
-#             # Prepare data for plot
-#             time = [score.created_at for score in scores]
-#             scores = [score.score for score in scores]
-
-#             # Create plot
-#             plt.figure(figsize=(10, 5))
-#             plt.plot(time, scores)
-#             plt.title(f'Scores for {unique_date}')
-#             plt.xlabel('Time')
-#             plt.ylabel('Score')
-
-#             # Save plot to temporary file
-#             img_temp = NamedTemporaryFile(delete=True)
-#             plt.savefig(img_temp.name, format='png')
-#             img_temp.seek(0)
-
-#             # Create or get OverallDayPlot object and save plot to it
-#             plot, created = OverallDayPlot.objects.get_or_create(date=unique_date)
-#             plot.plot.save(f"plot_{unique_date}.png", File(img_temp), save=True)
-#             # Close the plot figure
-#             plt.close()
-
-#         # filter all the gamesession with date = today
-#         scores = Score.objects.filter(created_at__date=date.today())
-#         game_sessions = scores.values_list('game_session', flat=True).distinct()
-
-#         # Create plot for each game session
-#         for game_session in game_sessions:
-#             # Get scores for this game session
-#             scores = Score.objects.filter(game_session=game_session, created_at__date=date.today())
-
-#             # Prepare data for plot
-#             time = [score.created_at for score in scores]
-#             scores = [score.score for score in scores]
-
-#             # Create plot
-#             plt.figure(figsize=(10, 5))
-#             plt.plot(time, scores)
-#             plt.title(f'Scores for {game_session} on {date.today()}')
-#             plt.xlabel('Time')
-#             plt.ylabel('Score')
-
-#             # Save plot to temporary file
-#             img_temp = NamedTemporaryFile(delete=True)
-#             plt.savefig(img_temp.name, format='png')
-#             img_temp.seek(0)
-
-#             # Create ScorePlot object and save plot to it
-#             plot = ScorePlot(date=date.today(), game_session=game_session)
-#             plot.plot.save(f"plot_{game_session}_{date.today()}.png", File(img_temp), save=True)
-
-#             # Close the plot figure
-#             plt.close()
-
-#         return Response("Plots generated and saved successfully.", status=status.HTTP_200_OK)
-
 
 # Older Session Plot
 class GenerateSessionPlot(APIView):
@@ -183,7 +115,10 @@ class GenerateSessionPlot(APIView):
             # Close the plot figure
             plt.close()
 
-        return Response("Plots generated and saved successfully.", status=status.HTTP_200_OK)
+        return JsonResponse(
+            {"message": "Session Plot generated and saved successfully."},
+            status=status.HTTP_200_OK
+        )
 
 class GenerateOverallDayPlot(APIView):
     def get(self, request):
@@ -220,5 +155,68 @@ class GenerateOverallDayPlot(APIView):
             # Close the plot figure
             plt.close()
 
-            return Response("Plots generated and saved successfully.", status=status.HTTP_200_OK)
+        return JsonResponse(
+            {"message": "Overall Day Plot generated and saved successfully."},
+            status=status.HTTP_200_OK
+        )
+
+
+class GenerateAveragePlot(APIView):
+    def get(self, request):
+        # this function generates the plot of average scores of each day vs date
+        # Get all unique dates
+        unique_dates = Score.objects.dates('created_at', 'day')
+
+        # Prepare data for plot
+        avg_scores = []
+        for unique_date in unique_dates:
+            # Get scores for this date
+            scores = Score.objects.filter(created_at__date=unique_date)
+            avg_score = scores.aggregate(models.Avg('score'))['score__avg']
+            avg_scores.append(avg_score)
+
+        # creating the plot
+        plt.figure(figsize=(10, 5))
+
+        # Format dates
+        unique_dates = [date.strftime('%m-%d-%Y') for date in unique_dates]
+        dates = mdates.datestr2num(unique_dates)
+
+        plt.plot_date(dates, avg_scores, marker='o', linestyle='-', color='b')
+
+        plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d-%Y'))
+        plt.gca().xaxis.set_major_locator(mdates.DayLocator())
+
+        plt.title('Average Scores')
+        plt.xlabel('Date')
+        plt.ylabel('Average Score')
+
+        # saving to temp file
+        img_temp = NamedTemporaryFile(delete=True)
+        plt.savefig(img_temp.name, format='png')
+        img_temp.seek(0)
+
+        #creating the AveragePlot object and saving the plot
+        plot, created = AveragePlot.objects.get_or_create()
+        plot.plot.save(f"plot_average.png", File(img_temp), save=True)
+        plt.close()
+
+        return JsonResponse(
+            {"message": "Average plot generated and saved successfully."},
+            status=status.HTTP_200_OK
+        )
+
         
+class AveragePlotListCreateView(generics.ListCreateAPIView):
+    queryset = AveragePlot.objects.all()
+    serializer_class = AveragePlotSeializer
+    permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self, *args, **kwargs):
+        queryset = AveragePlot.objects.all()
+        return queryset
+
+class AveragePlotUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = AveragePlot.objects.all()
+    serializer_class = AveragePlotSeializer
+    permission_classes = [permissions.AllowAny]

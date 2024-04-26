@@ -42,3 +42,14 @@ class SessionPlot(models.Model):
         verbose_name = "SessionPlots"
         verbose_name_plural = "SessionPlots"
 
+
+class AveragePlot(models.Model):
+    id = models.UUIDField(default=uuid.uuid4, primary_key= True, editable=False)
+    plot = models.ImageField(upload_to = 'plot/',null = True, blank= True )
+
+    def __str__(self):
+        return str(self.id)
+    
+    class Meta:
+        verbose_name = "AveragePlot"
+        verbose_name_plural = "AveragePlots"
